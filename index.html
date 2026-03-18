@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KamilDeploy - Instant Web Hosting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-[#0f172a] text-slate-200 min-h-screen flex items-center justify-center p-6">
+    
+    <div class="max-w-2xl w-full glass border border-slate-700/50 p-8 rounded-3xl shadow-2xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                KamilDeploy
+            </h1>
+            <p class="text-slate-400 mt-2">Ngapain ribet? Paste script kamu, langsung jadi website!</p>
+        </header>
+        
+        <div class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 ml-1 text-left">Target Subdomain</label>
+                <div class="relative">
+                    <input id="subdomain" type="text" placeholder="misal: portofolio-saya" 
+                        class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-600">
+                    <span class="absolute right-4 top-4 text-slate-500 font-semibold text-sm">.vercel.app</span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 ml-1 text-left">Paste Script HTML / CSS / JS</label>
+                <textarea id="script" rows="10" placeholder="<html>&#10;  <body>&#10;    <h1>Halo dari KamilDeploy!</h1>&#10;  </body>&#10;</html>" 
+                    class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-mono text-sm placeholder:text-slate-600"></textarea>
+            </div>
+
+            <button onclick="prosesDeploy()" id="btn" 
+                class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span>🚀 TERBITKAN SEKARANG</span>
+            </button>
+        </div>
+
+        <div id="result" class="mt-8 hidden p-5 border rounded-2xl bg-slate-900/80 border-blue-500/30">
+            <div id="loading-state" class="text-center">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent mb-3"></div>
+                <p class="text-blue-400 font-medium">KamilDeploy sedang bekerja...</p>
+            </div>
+            <div id="success-state" class="hidden text-center">
+                <p class="text-emerald-400 font-bold mb-2 text-lg">✨ Website Berhasil Online!</p>
+                <a id="link-web" href="#" target="_blank" class="text-white underline break-all text-sm opacity-80 hover:opacity-100"></a>
+            </div>
+            <div id="error-state" class="hidden text-center text-red-400">
+                <p id="error-msg"></p>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-center text-slate-600 text-[10px] uppercase tracking-[2px]">
+            Powered by KamilDeploy Infrastructure
+        </footer>
+    </div>
+
+    <script>
+        async function prosesDeploy() {
+            const btn = document.getElementById('btn');
+            const resBox = document.getElementById('result');
+            const loadState = document.getElementById('loading-state');
+            const successState = document.getElementById('success-state');
+            const errorState = document.getElementById('error-state');
+            
+            const subdomain = document.getElementById('subdomain').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+            const scriptContent = document.getElementById('script').value;
+            
+            // TOKEN RAHASIA KAMU
+            const TOKEN = "Vcp_4BJCJw1uXhiCCAHxwmvbYJxxaPqbxuxZZmz50tyNuBV2pLYJv70Ojb5T"; 
+
+            if(!subdomain || !scriptContent) {
+                alert("Waduh, isi nama subdomain sama scriptnya dulu dong!");
+                return;
+            }
+
+            // UI Reset
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            resBox.classList.remove('hidden');
+            loadState.classList.remove('hidden');
+            successState.classList.add('hidden');
+            errorState.classList.add('hidden');
+
+            try {
+                const res = await fetch('https://api.vercel.com/v13/deployments', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: subdomain,
+                        files: [{ file: 'index.html', data: scriptContent }],
+                        projectSettings: { framework: null }
+                    })
+                });
+
+                const data = await res.json();
+                loadState.classList.add('hidden');
+                
+                if (res.ok) {
+                    successState.classList.remove('hidden');
+                    const link = document.getElementById('link-web');
+                    link.href = `https://${data.url}`;
+                    link.innerText = `https://${data.url}`;
+                } else {
+                    errorState.classList.remove('hidden');
+                    document.getElementById('error-msg').innerText = "Gagal: " + data.error.message;
+                }
+            } catch (err) {
+                loadState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('error-msg').innerText = "Koneksi ke KamilDeploy terputus!";
+            } finally {
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            }
+        }
+    </script>
+</body>
+</html>
