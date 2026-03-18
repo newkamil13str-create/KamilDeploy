@@ -3,125 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KamilDeploy - Instant Web Hosting</title>
+    <title>KAMIL13STR | Ultra Gaming Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            background-color: #0a0a0a;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+        }
+        .font-gaming { font-family: 'Orbitron', sans-serif; }
+        .neon-border-purple { border: 1px solid #bc13fe; box-shadow: 0 0 10px #bc13fe; }
+        .neon-border-cyan { border: 1px solid #00f3ff; box-shadow: 0 0 10px #00f3ff; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-[#0f172a] text-slate-200 min-h-screen flex items-center justify-center p-6">
-    
-    <div class="max-w-2xl w-full glass border border-slate-700/50 p-8 rounded-3xl shadow-2xl">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-                KamilDeploy
-            </h1>
-            <p class="text-slate-400 mt-2">Ngapain ribet? Paste script kamu, langsung jadi website!</p>
-        </header>
+<body class="bg-carbon overflow-x-hidden">
+
+    <nav class="fixed top-0 w-full z-50 glass border-b border-white/10 px-6 py-4 flex justify-between items-center">
+        <h1 class="font-gaming text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-neonPurple to-neonCyan">
+            KAMIL13STR
+        </h1>
+        <div class="flex gap-4">
+            <button onclick="showPage('home')" class="hover:text-neonCyan transition">Home</button>
+            <button onclick="showPage('login')" id="btn-auth" class="bg-neonPurple px-4 py-1 rounded-md font-bold text-sm">LOGIN</button>
+        </div>
+    </nav>
+
+    <main id="app-content" class="pt-24 pb-10 px-6 max-w-7xl mx-auto">
         
-        <div class="space-y-6">
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 ml-1 text-left">Target Subdomain</label>
-                <div class="relative">
-                    <input id="subdomain" type="text" placeholder="contoh: kamilganteng" 
-                        class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-600">
-                    <span class="absolute right-4 top-4 text-slate-500 font-semibold text-sm">.vercel.app</span>
+        <section id="page-home" class="page">
+            <div class="text-center mb-12">
+                <h2 class="font-gaming text-4xl md:text-6xl mb-4">TEMPATNYA AKUN <span class="text-neonPurple">SULTAN</span></h2>
+                <p class="text-gray-400">Fast Respond • Aman • Garansi Seumur Hidup</p>
+            </div>
+            
+            <div class="flex justify-center gap-4 mb-8">
+                <button class="neon-border-purple px-6 py-2 rounded-full font-gaming text-sm hover:bg-neonPurple transition">FREE FIRE</button>
+                <button class="neon-border-cyan px-6 py-2 rounded-full font-gaming text-sm hover:bg-neonCyan hover:text-black transition">MOBILE LEGENDS</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="product-grid">
+                </div>
+        </section>
+
+        <section id="page-login" class="page hidden flex justify-center items-center min-h-[60vh]">
+            <div class="glass p-8 rounded-2xl w-full max-w-md border border-white/10">
+                <h3 class="font-gaming text-2xl mb-6 text-center">ACCESS INTERFACE</h3>
+                <div class="space-y-4">
+                    <input type="text" placeholder="Email / WA / ID" class="w-full bg-black/50 border border-white/20 p-3 rounded-lg focus:border-neonPurple outline-none">
+                    <input type="password" placeholder="Password" class="w-full bg-black/50 border border-white/20 p-3 rounded-lg focus:border-neonPurple outline-none">
+                    
+                    <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-dashed border-white/20">
+                        <span id="captcha-ques" class="font-bold text-neonCyan">5 + 3 = ?</span>
+                        <input type="number" id="captcha-ans" class="w-20 bg-transparent border-b border-neonCyan outline-none text-center">
+                    </div>
+
+                    <button class="w-full bg-neonPurple py-3 rounded-lg font-bold hover:brightness-125 transition">SIGN IN</button>
+                    <p class="text-center text-xs text-gray-500">Belum punya akun? <span class="text-neonCyan cursor-pointer">Daftar Sekarang</span></p>
                 </div>
             </div>
+        </section>
 
-            <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 ml-1 text-left">Paste Script HTML / CSS / JS</label>
-                <textarea id="script" rows="10" placeholder="<html>&#10;  <body>&#10;    <h1>Halo dari KamilDeploy!</h1>&#10;  </body>&#10;</html>" 
-                    class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-mono text-sm placeholder:text-slate-600"></textarea>
+        <section id="page-admin" class="page hidden">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="font-gaming text-3xl">COMMAND CENTER</h2>
+                <div class="bg-red-500/20 text-red-500 px-3 py-1 rounded border border-red-500 text-xs uppercase font-bold tracking-widest">
+                    Secure Session Active
+                </div>
             </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-1 space-y-2">
+                    <button class="w-full text-left p-3 bg-white/5 rounded-lg border-l-4 border-neonPurple">Manajemen Stok</button>
+                    <button class="w-full text-left p-3 hover:bg-white/5 rounded-lg border-l-4 border-transparent transition">Transaksi Pending</button>
+                    <button class="w-full text-left p-3 hover:bg-white/5 rounded-lg border-l-4 border-transparent transition">Daftar Blacklist</button>
+                    <button class="w-full text-left p-3 hover:bg-white/5 rounded-lg border-l-4 border-transparent transition">Voucher System</button>
+                </div>
 
-            <button onclick="prosesDeploy()" id="btn" 
-                class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 flex items-center justify-center gap-2">
-                <span>🚀 TERBITKAN SEKARANG</span>
-            </button>
-        </div>
+                <div class="lg:col-span-3 glass p-6 rounded-xl border border-white/10">
+                    <h4 class="mb-4 font-bold border-b border-white/10 pb-2">Input Stok Akun Baru</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="Judul Akun" class="bg-black/40 p-2 rounded border border-white/10">
+                        <select class="bg-black/40 p-2 rounded border border-white/10">
+                            <option>Free Fire</option>
+                            <option>Mobile Legends</option>
+                        </select>
+                        <input type="number" placeholder="Harga (Rp)" class="bg-black/40 p-2 rounded border border-white/10">
+                        <input type="text" placeholder="Link Gambar Spek" class="bg-black/40 p-2 rounded border border-white/10">
+                        <textarea placeholder="Data Akun (ID:Pass) - Rahasia" class="col-span-2 bg-black/40 p-2 rounded border border-white/10 h-24"></textarea>
+                        <button class="col-span-2 bg-neonCyan text-black font-bold py-2 rounded hover:brightness-110">UPLOAD DATA</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div id="result" class="mt-8 hidden p-5 border rounded-2xl bg-slate-900/80 border-blue-500/30">
-            <div id="loading-state" class="text-center">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent mb-3"></div>
-                <p class="text-blue-400 font-medium">KamilDeploy sedang bekerja...</p>
-            </div>
-            <div id="success-state" class="hidden text-center">
-                <p class="text-emerald-400 font-bold mb-2 text-lg">✨ Website Berhasil Online!</p>
-                <a id="link-web" href="#" target="_blank" class="text-white underline break-all text-sm opacity-80 hover:opacity-100"></a>
-            </div>
-            <div id="error-state" class="hidden text-center text-red-400">
-                <p id="error-msg"></p>
-            </div>
-        </div>
-
-        <footer class="mt-8 text-center text-slate-600 text-[10px] uppercase tracking-[2px]">
-            Powered by KamilDeploy Infrastructure
-        </footer>
-    </div>
+    </main>
 
     <script>
-        async function prosesDeploy() {
-            const btn = document.getElementById('btn');
-            const resBox = document.getElementById('result');
-            const loadState = document.getElementById('loading-state');
-            const successState = document.getElementById('success-state');
-            const errorState = document.getElementById('error-state');
-            
-            const subdomain = document.getElementById('subdomain').value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
-            const scriptContent = document.getElementById('script').value;
-            
-            // TOKEN RAHASIA KAMU
-            const TOKEN = "vcp_7Y1WqklS8NkK7YLuOum4I9A4iwmaSjOgiQ5EHuFou8qT9DHWCn2aVn3c"; 
+        // -- INISIALISASI SUPABASE --
+        const _supabase = supabase.createClient('URL_SUPABASE_ANDA', 'KEY_ANON_ANDA');
 
-            if(!subdomain || !scriptContent) {
-                alert("Waduh, isi nama subdomain sama scriptnya dulu dong!");
-                return;
-            }
+        // -- NAVIGATION LOGIC --
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
 
-            // UI Reset
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            resBox.classList.remove('hidden');
-            loadState.classList.remove('hidden');
-            successState.classList.add('hidden');
-            errorState.classList.add('hidden');
+        // -- MOCK DATA UNTUK PREVIEW --
+        const mockProducts = [
+            { id: 1, title: 'FF Old Akun - Bundle Hip Hop', price: 1500000, cat: 'FF', img: 'https://via.placeholder.com/400x200/1a1a1a/bc13fe?text=FF+SPEC' },
+            { id: 2, title: 'MLBB Mythical Glory - 200+ Skin', price: 2300000, cat: 'ML', img: 'https://via.placeholder.com/400x200/1a1a1a/00f3ff?text=ML+SPEC' },
+            { id: 3, title: 'FF Akun Evo Gun Max Level', price: 850000, cat: 'FF', img: 'https://via.placeholder.com/400x200/1a1a1a/bc13fe?text=FF+SPEC' },
+        ];
 
-            try {
-                const res = await fetch('https://api.vercel.com/v13/deployments', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: subdomain,
-                        files: [{ file: 'index.html', data: scriptContent }],
-                        projectSettings: { framework: null }
-                    })
-                });
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = mockProducts.map(p => `
+                <div class="glass p-4 rounded-xl border border-white/5 hover:neon-border-${p.cat === 'FF' ? 'purple' : 'cyan'} transition-all cursor-pointer group">
+                    <img src="${p.img}" class="rounded-lg mb-4 grayscale group-hover:grayscale-0 transition duration-500">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-gray-300">${p.cat}</span>
+                    <h3 class="font-bold my-2 group-hover:text-neonCyan transition">${p.title}</h3>
+                    <div class="flex justify-between items-center">
+                        <p class="text-neonPurple font-bold">Rp ${p.price.toLocaleString()}</p>
+                        <i data-lucide="shopping-cart" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
 
-                const data = await res.json();
-                loadState.classList.add('hidden');
-                
-                if (res.ok) {
-                    successState.classList.remove('hidden');
-                    const link = document.getElementById('link-web');
-                    link.href = `https://${data.url}`;
-                    link.innerText = `https://${data.url}`;
-                } else {
-                    errorState.classList.remove('hidden');
-                    document.getElementById('error-msg').innerText = "Gagal: " + data.error.message;
-                }
-            } catch (err) {
-                loadState.classList.add('hidden');
-                errorState.classList.remove('hidden');
-                document.getElementById('error-msg').innerText = "Koneksi ke KamilDeploy terputus!";
-            } finally {
-                btn.disabled = false;
-                btn.style.opacity = "1";
+        // -- INITIAL LOAD --
+        window.onload = () => {
+            renderProducts();
+            lucide.createIcons();
+
+            // Cek URL untuk Admin Route: /#kamil-admin
+            if(window.location.hash === '#kamil-admin') {
+                showPage('admin');
             }
         }
     </script>
